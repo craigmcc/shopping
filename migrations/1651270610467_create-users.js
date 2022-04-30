@@ -1,0 +1,46 @@
+/* eslint-disable camelcase */
+
+exports.shorthands = undefined;
+
+exports.up = pgm => {
+
+    pgm.createTable("users", {
+        id: {
+            notNull: true,
+            primaryKey: true,
+            type: "uuid",
+        },
+        active: {
+            default: true,
+            notNull: true,
+            type: "boolean",
+        },
+        email: {
+            type: "text",
+        },
+        name: {
+            notNull: true,
+            type: "text",
+        },
+        password: {
+            notNull: true,
+            type: "text",
+        },
+        scope: {
+            notNull: true,
+            type: "text",
+        },
+        username: {
+            notNull: true,
+            type: "text",
+        },
+    });
+
+    pgm.createIndex("users", "username", {
+        name: "uk_users_username",
+        unique: true,
+    });
+
+};
+
+//exports.down = pgm => {};
