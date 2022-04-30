@@ -8,7 +8,7 @@ exports.up = pgm => {
         id: {
             notNull: true,
             primaryKey: true,
-            type: "serial",
+            type: "uuid",
         },
         access_token: {
             notNull: true,
