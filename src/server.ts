@@ -16,7 +16,7 @@ export const PORT_HTTPS = process.env.PORT_HTTPS ? parseInt(process.env.PORT_HTT
 // Internal Modules ----------------------------------------------------------
 
 import Database from "./models/Database";
-//import ExpressApplication from "./routers/ExpressApplication";
+import ExpressApplication from "./routers/ExpressApplication";
 import logger from "./util/ServerLogger";
 
 // Configure Models and Associations -----------------------------------------
@@ -26,7 +26,6 @@ Database.getDatabaseName(); // Trigger initialization of Database module
 // Configure and Start Server ------------------------------------------------
 
 if (PORT) {
-/*
     ExpressApplication.listen(PORT, () => {
         logger.info({
             context: "Startup",
@@ -35,11 +34,9 @@ if (PORT) {
             port: PORT,
         });
     });
-*/
 }
 
 if (PORT_HTTPS && process.env.HTTPS_CERT && process.env.HTTPS_KEY) {
-/*
     https.createServer({
         cert: fs.readFileSync(process.env.HTTPS_CERT),
         key: fs.readFileSync(process.env.HTTPS_KEY),
@@ -51,5 +48,4 @@ if (PORT_HTTPS && process.env.HTTPS_CERT && process.env.HTTPS_KEY) {
             port: PORT_HTTPS,
         });
     });
-*/
 }
