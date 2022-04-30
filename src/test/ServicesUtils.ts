@@ -4,6 +4,7 @@
 
 // External Modules ----------------------------------------------------------
 
+const uuid = require("uuid");
 import {PasswordTokenRequest} from "@craigmcc/oauth-orchestrator";
 
 // Internal Modules ----------------------------------------------------------
@@ -46,6 +47,16 @@ export class ServicesUtils extends BaseUtils {
         return result;
     }
 */
+
+    /**
+     * Render a UUID value that should be invalid (in the sense that there
+     * should be no matching ID in the database.  Because we are using v4 UUIDs
+     * in the database itself, let's generate a random v1 version UUID to make
+     * a false positive more unlikely.
+     */
+    public invalidId(): string {
+        return uuid.v1();
+    }
 
     /**
      * Trigger loading of database data, and clean up any local storage
