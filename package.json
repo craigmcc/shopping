@@ -1,0 +1,32 @@
+{
+  "name": "@craigmcc/shopping",
+  "version": "1.0.0",
+  "description": "Shopping List Application",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craigmcc/shopping.git"
+  },
+  "keywords": [
+    "express",
+    "postgres",
+    "react",
+    "sequelize",
+    "typescript",
+    "shopping"
+  ],
+  "author": "craigmcc",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/craigmcc/shopping/issues"
+  },
+  "homepage": "https://github.com/craigmcc/shopping#readme",
+  "dependencies": {
+    "node-pg-migrate": "^6.2.1",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4"
+  }
+}
