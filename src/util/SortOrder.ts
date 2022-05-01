@@ -13,6 +13,10 @@ export const ACCESS_TOKENS: Order = [
     [ "expires", "DESC" ],
 ];
 
+export const GROUPS: Order = [
+    ["name", "ASC" ],
+];
+
 export const REFRESH_TOKENS: Order = [
     [ "userId", "ASC" ],
     [ "expires", "DESC" ],

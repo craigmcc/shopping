@@ -10,6 +10,7 @@ import {Sequelize} from "sequelize-typescript";
 // Internal Modules ----------------------------------------------------------
 
 import AccessToken from "./AccessToken";
+import Group from "./Group";
 import RefreshToken from "./RefreshToken";
 import User from "./User";
 import logger from "../util/ServerLogger";
@@ -29,7 +30,8 @@ export const Database = new Sequelize(DATABASE_URL, {
 });
 
 Database.addModels([
-    // Library Stack - Author FK messed up in tests if this is not before Author
+    // Group Stack
+    Group,
     // User Stack
     User,
     AccessToken,

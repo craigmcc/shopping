@@ -9,9 +9,10 @@
 import * as SeedData from "./SeedData";
 import AccessToken from "../models/AccessToken";
 import Database from "../models/Database";
+import Group from "../models/Group";
 import RefreshToken from "../models/RefreshToken";
 import User from "../models/User";
-//TODO import {clearMapping} from "../oauth/OAuthMiddleware";
+import {clearMapping} from "../oauth/OAuthMiddleware";
 import {hashPassword} from "../oauth/OAuthUtils";
 
 // Public Objects ------------------------------------------------------------
@@ -46,7 +47,7 @@ export abstract class BaseUtils {
         });
 
         // Clear any previous OAuth mapping for Library id -> scope
-//TODO        clearMapping();
+        clearMapping();
 
         // Load users (and tokens) if requested
         if (options.withUsers) {
@@ -62,6 +63,11 @@ export abstract class BaseUtils {
                     await loadRefreshTokens(userSuperuser, SeedData.REFRESH_TOKENS_SUPERUSER);
                 }
             }
+        }
+
+        // Load groups (and related children) if requested
+        if (options.withGroups) {
+            await loadGroups(SeedData.GROUPS);
         }
 
     }
@@ -86,6 +92,20 @@ const loadAccessTokens
         console.info(`  Reloading AccessTokens for User '${user.username}' ERROR`, error);
         throw error;
     }
+}
+
+const loadGroups
+    = async (groups: Partial<Group>[]): Promise<Group[]> =>
+{
+    let results: Group[] = [];
+    try {
+        // @ts-ignore NOTE - did Typescript get tougher about Partial<M>?
+        results = await Group.bulkCreate(groups);
+    } catch (error) {
+        console.info("  Reloading Groups ERROR", error);
+        throw error;
+    }
+    return results;
 }
 
 const loadRefreshTokens

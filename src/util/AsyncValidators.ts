@@ -14,6 +14,7 @@ import {Op} from "sequelize";
 
 import AccessToken from "../models/AccessToken";
 import RefreshToken from "../models/RefreshToken";
+import Group from "../models/Group";
 import User from "../models/User";
 
 // Public Objects ------------------------------------------------------------
@@ -31,6 +32,58 @@ export const validateAccessTokenTokenUnique
             options.where.id = { [Op.ne]: accessToken.id }
         }
         const results = await AccessToken.findAll(options);
+        return (results.length === 0);
+    } else {
+        return true;
+    }
+}
+
+export const validateGroupNameUnique
+    = async (group: Group): Promise<boolean> =>
+{
+    if (group && group.name) {
+        let options = {};
+        if (group.id) {
+            options = {
+                where: {
+                    id: {[Op.ne]: group.id},
+                    name: group.name
+                }
+            }
+        } else {
+            options = {
+                where: {
+                    name: group.name
+                }
+            }
+        }
+        let results = await Group.findAll(options);
+        return (results.length === 0);
+    } else {
+        return true;
+    }
+}
+
+export const validateGroupScopeUnique
+    = async (group: Group): Promise<boolean> =>
+{
+    if (group && group.scope) {
+        let options = {};
+        if (group.id) {
+            options = {
+                where: {
+                    id: {[Op.ne]: group.id},
+                    scope: group.scope
+                }
+            }
+        } else {
+            options = {
+                where: {
+                    scope: group.scope
+                }
+            }
+        }
+        let results = await Group.findAll(options);
         return (results.length === 0);
     } else {
         return true;

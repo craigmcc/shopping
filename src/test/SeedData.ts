@@ -7,6 +7,7 @@
 // Internal Modules ----------------------------------------------------------
 
 import AccessToken from "../models/AccessToken";
+import Group from "../models/Group";
 import RefreshToken from "../models/RefreshToken";
 import User from "../models/User";
 
@@ -33,9 +34,21 @@ export const ACCESS_TOKENS_SUPERUSER: Partial<AccessToken>[] = [
 
 // *** Groups ***
 
+export const GROUP_NAME_FIRST = "First Group";
+export const GROUP_NAME_SECOND = "Second Group";
 export const GROUP_SCOPE_FIRST = "scope1";
 export const GROUP_SCOPE_SECOND = "scope2";
 
+export const GROUPS: Partial<Group>[] = [
+    {
+        name: GROUP_NAME_FIRST,
+        scope: GROUP_SCOPE_FIRST,
+    },
+    {
+        name: GROUP_NAME_SECOND,
+        scope: GROUP_SCOPE_SECOND,
+    }
+];
 
 // *** Refresh Tokens ***
 

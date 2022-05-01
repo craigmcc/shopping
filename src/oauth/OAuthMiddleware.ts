@@ -20,7 +20,7 @@ import {
 import OAuthOrchestrator from "./OAuthOrchestrator";
 import AccessToken from "../models/AccessToken";
 import User from "../models/User";
-//import GroupServices from "../services/GroupServices";
+import GroupServices from "../services/GroupServices";
 import {Forbidden} from "../util/HttpErrors";
 import logger from "../util/ServerLogger";
 
@@ -403,12 +403,10 @@ const extractToken = (req: Request) : string | null => {
  */
 const loadMapping = async (): Promise<void> => {
     mapping.clear();
-/* TODO
     const groups = await GroupServices.all();
     groups.forEach(group => {
         mapping.set(group.id, group.scope.trim());
     });
-*/
 }
 
 /**

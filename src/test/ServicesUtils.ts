@@ -10,8 +10,9 @@ import {PasswordTokenRequest} from "@craigmcc/oauth-orchestrator";
 // Internal Modules ----------------------------------------------------------
 
 import BaseUtils, {OPTIONS} from "./BaseUtils"
+import Group from "../models/Group";
 import User from "../models/User";
-//TODO import OAuthOrchestrator from "../oauth/OAuthOrchestrator";
+import OAuthOrchestrator from "../oauth/OAuthOrchestrator";
 import {NotFound} from "../util/HttpErrors";
 
 // Public Objects -----------------------------------------------------------
@@ -28,7 +29,6 @@ export class ServicesUtils extends BaseUtils {
      *
      * @throws NotFound                 If no such user exists
      */
-/*TODO
     public async credentials(username: string): Promise<string> {
         const previous = this.credentialsCache.get(username);
         if (previous) {
@@ -46,7 +46,6 @@ export class ServicesUtils extends BaseUtils {
         this.credentialsCache.set(username, result);
         return result;
     }
-*/
 
     /**
      * Render a UUID value that should be invalid (in the sense that there
@@ -67,6 +66,24 @@ export class ServicesUtils extends BaseUtils {
     public async loadData(options: Partial<OPTIONS>): Promise<void> {
         await super.loadData(options);
         this.credentialsCache.clear();
+    }
+
+    /**
+     * Look up and return the specified Group from the database.
+     *
+     * @param name                      Name of the requested Group
+     *
+     * @throws NotFound                 If no such Group exists
+     */
+    public async lookupGroup(name: string): Promise<Group> {
+        const result = await Group.findOne({
+            where: { name: name }
+        });
+        if (result) {
+            return result;
+        } else {
+            throw new NotFound(`name: Missing Group '${name}'`);
+        }
     }
 
     /**
