@@ -104,12 +104,16 @@ export const USER_SCOPE_FIRST_ADMIN = `${GROUP_SCOPE_FIRST}:admin`;
 export const USER_SCOPE_FIRST_REGULAR = `${GROUP_SCOPE_FIRST}:regular`;
 export const USER_SCOPE_SECOND_ADMIN = `${GROUP_SCOPE_SECOND}:admin`;
 export const USER_SCOPE_SECOND_REGULAR = `${GROUP_SCOPE_SECOND}:regular`;
+export const USER_SCOPE_THIRD_ADMIN = `${GROUP_SCOPE_THIRD}:admin`;
+export const USER_SCOPE_THIRD_REGULAR = `${GROUP_SCOPE_THIRD}:regular`;
 
 export const USER_USERNAME_SUPERUSER = "superuser";
 export const USER_USERNAME_FIRST_ADMIN = "firstadmin";
 export const USER_USERNAME_FIRST_REGULAR = "firstregular";
 export const USER_USERNAME_SECOND_ADMIN = "secondadmin";
 export const USER_USERNAME_SECOND_REGULAR = "secondregular";
+export const USER_USERNAME_THIRD_ADMIN = "thirdadmin";
+export const USER_USERNAME_THIRD_REGULAR = "thirdregular";
 
 export const USERS: Partial<User>[] = [
     {
@@ -135,6 +139,18 @@ export const USERS: Partial<User>[] = [
         name: "Second Regular User",
         scope: USER_SCOPE_SECOND_REGULAR,
         username: USER_USERNAME_SECOND_REGULAR,
+    },
+    {
+        active: true,
+        name: "Third Admin User",
+        scope: USER_SCOPE_THIRD_ADMIN,
+        username: USER_USERNAME_THIRD_ADMIN,
+    },
+    {
+        active: true,
+        name: "Third Regular User",
+        scope: USER_SCOPE_THIRD_REGULAR,
+        username: USER_USERNAME_THIRD_REGULAR,
     },
     {
         active: true,
