@@ -11,6 +11,7 @@ import {Sequelize} from "sequelize-typescript";
 
 import AccessToken from "./AccessToken";
 import Group from "./Group";
+import List from "./List";
 import RefreshToken from "./RefreshToken";
 import User from "./User";
 import logger from "../util/ServerLogger";
@@ -32,6 +33,7 @@ export const Database = new Sequelize(DATABASE_URL, {
 Database.addModels([
     // Group Stack
     Group,
+    List,
     // User Stack
     User,
     AccessToken,

@@ -1,6 +1,6 @@
-// GroupServices -------------------------------------------------------------
+// ListServices --------------------------------------------------------------
 
-// Services implementation for Group models.
+// Services implementation for List models.
 
 // External Modules ----------------------------------------------------------
 
@@ -8,58 +8,51 @@ import {FindOptions, Op} from "sequelize";
 
 // Internal Modules ----------------------------------------------------------
 
-import BaseParentServices from "./BaseParentServices";
+import BaseChildServices from "./BaseChildServices";
 import Group from "../models/Group";
 import List from "../models/List";
-import ListServices from "../services/ListServices";
 import {NotFound} from "../util/HttpErrors";
 import {appendPaginationOptions} from "../util/QueryParameters";
 import * as SortOrder from "../util/SortOrder";
 
 // Public Classes ------------------------------------------------------------
 
-class GroupServices extends BaseParentServices<Group> {
+class ListServices extends BaseChildServices<List, Group> {
 
     constructor () {
-        super(Group, SortOrder.GROUPS, [
+        super(Group, List, SortOrder.LISTS, [
             "active",
-            "email",
+            "groupId",
             "name",
             "notes",
-            "scope",
+            "theme",
         ]);
     }
 
     // Model-Specific Methods ------------------------------------------------
 
-    public async exact(name: string, query?: any): Promise<Group> {
+    public async exact(groupId: string, name: string, query?: any): Promise<List> {
         let options: FindOptions = this.appendIncludeOptions({
-            where: { name: name }
+            where: {
+                groupId: groupId,
+                name: name,
+            }
         }, query);
-        const results = await Group.findAll(options);
-        if (results.length !== 1) {
+        const result = await List.findOne(options);
+        if (result) {
+            return result;
+        } else {
             throw new NotFound(
-                `name: Missing Group '${name}'`,
-                "GroupServices.exact");
+                `name: Missing List '${name}'`,
+                "ListServices.exact");
         }
-        return results[0];
-    }
-
-    public async lists(groupId: string, query?: any): Promise<List[]> {
-        const group = await this.read("GroupServices.lists", groupId);
-        const options: FindOptions = ListServices.appendMatchOptions({
-            order: SortOrder.LISTS,
-        }, query);
-        return group.$get("lists", options);
     }
 
     // Public Helpers --------------------------------------------------------
 
     /**
      * Supported include query parameters:
-     * * withCategories                 Include child Categories
-     * * withItems                      Include child Items
-     * * withLists                      Include child Lists
+     * * withGroup                      Include parent Group
      */
     public appendIncludeOptions(options: FindOptions, query?: any): FindOptions {
         if (!query) {
@@ -67,18 +60,8 @@ class GroupServices extends BaseParentServices<Group> {
         }
         options = appendPaginationOptions(options, query);
         const include: any = options.include ? options.include : [];
-/*
-        if ("" === query.withCategories) {
-            include.push(Category);
-        }
-*/
-/*
-        if ("" === query.withItems) {
-            include.push(Item);
-        }
-*/
-        if ("" === query.withLists) {
-            include.push(List);
+        if ("" === query.withGroup) {
+            include.push(Group);
         }
         if (include.length > 0) {
             options.include = include;
@@ -88,8 +71,8 @@ class GroupServices extends BaseParentServices<Group> {
 
     /**
      * Supported match query parameters:
-     * * active                         Select active Groups
-     * * name={wildcard}                Select Groups with name matching {wildcard}
+     * * active                         Select active Lists
+     * * name={wildcard}                Select Lists with name matching {wildcard}
      */
     public appendMatchOptions(options: FindOptions, query?: any): FindOptions {
         options = this.appendIncludeOptions(options, query);
@@ -111,4 +94,4 @@ class GroupServices extends BaseParentServices<Group> {
 
 }
 
-export default new GroupServices();
+export default new ListServices();

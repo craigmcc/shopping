@@ -17,6 +17,11 @@ export const GROUPS: Order = [
     ["name", "ASC" ],
 ];
 
+export const LISTS: Order = [
+    [ "groupId", "ASC" ],
+    [ "name", "ASC" ],
+];
+
 export const REFRESH_TOKENS: Order = [
     [ "userId", "ASC" ],
     [ "expires", "DESC" ],

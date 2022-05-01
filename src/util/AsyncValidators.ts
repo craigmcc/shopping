@@ -15,6 +15,7 @@ import {Op} from "sequelize";
 import AccessToken from "../models/AccessToken";
 import RefreshToken from "../models/RefreshToken";
 import Group from "../models/Group";
+import List from "../models/List";
 import User from "../models/User";
 
 // Public Objects ------------------------------------------------------------
@@ -84,6 +85,34 @@ export const validateGroupScopeUnique
             }
         }
         let results = await Group.findAll(options);
+        return (results.length === 0);
+    } else {
+        return true;
+    }
+}
+
+export const validateListNameUnique
+    = async (list: List): Promise<boolean> =>
+{
+    if (list && list.name) {
+        let options = {};
+        if (list.id) {
+            options = {
+                where: {
+                    id: {[Op.ne]: list.id},
+                    groupId: list.groupId,
+                    name: list.name
+                }
+            }
+        } else {
+            options = {
+                where: {
+                    groupId: list.groupId,
+                    name: list.name
+                }
+            }
+        }
+        let results = await List.findAll(options);
         return (results.length === 0);
     } else {
         return true;

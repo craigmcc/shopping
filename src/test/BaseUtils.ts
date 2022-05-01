@@ -10,6 +10,7 @@ import * as SeedData from "./SeedData";
 import AccessToken from "../models/AccessToken";
 import Database from "../models/Database";
 import Group from "../models/Group";
+import List from "../models/List";
 import RefreshToken from "../models/RefreshToken";
 import User from "../models/User";
 import {clearMapping} from "../oauth/OAuthMiddleware";
@@ -67,7 +68,12 @@ export abstract class BaseUtils {
 
         // Load groups (and related children) if requested
         if (options.withGroups) {
-            await loadGroups(SeedData.GROUPS);
+            const groups = await loadGroups(SeedData.GROUPS);
+            if (options.withLists) {
+                groups.forEach(async group => {
+                    await loadLists(group, SeedData.LISTS);
+                });
+            }
         }
 
     }
@@ -103,6 +109,23 @@ const loadGroups
         results = await Group.bulkCreate(groups);
     } catch (error) {
         console.info("  Reloading Groups ERROR", error);
+        throw error;
+    }
+    return results;
+}
+
+const loadLists
+    = async (group: Partial<Group>, lists: Partial<List>[]): Promise<List[]> =>
+{
+    lists.forEach(list => {
+        list.groupId = group.id;
+    });
+    let results: List[] = [];
+    try {
+        // @ts-ignore NOTE - did Typescript get tougher about Partial<M>?
+        results = await List.bulkCreate(lists);
+    } catch (error) {
+        console.info("  Reloading Lists ERROR", error);
         throw error;
     }
     return results;

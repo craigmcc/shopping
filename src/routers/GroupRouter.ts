@@ -77,14 +77,12 @@ GroupRouter.put("/:groupId",
 
 // Child Lookup Routes -------------------------------------------------------
 
-/*
-// GET /:groupId/authors - Find matching Authors for this Group
-GroupRouter.get("/:groupId/authors",
+// GET /:groupId/lists - Find matching Lists for this Group
+GroupRouter.get("/:groupId/lists",
     requireRegular,
     async (req: Request, res: Response) => {
-        res.send(await GroupServices.authors(
-            parseInt(req.params.groupId, 10),
+        res.send(await GroupServices.lists(
+            req.params.groupId,
             req.query
         ));
     });
-*/

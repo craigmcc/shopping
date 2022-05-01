@@ -8,6 +8,7 @@
 
 import AccessToken from "../models/AccessToken";
 import Group from "../models/Group";
+import List from "../models/List";
 import RefreshToken from "../models/RefreshToken";
 import User from "../models/User";
 
@@ -36,8 +37,10 @@ export const ACCESS_TOKENS_SUPERUSER: Partial<AccessToken>[] = [
 
 export const GROUP_NAME_FIRST = "First Group";
 export const GROUP_NAME_SECOND = "Second Group";
+export const GROUP_NAME_THIRD = "Third Group";
 export const GROUP_SCOPE_FIRST = "scope1";
 export const GROUP_SCOPE_SECOND = "scope2";
+export const GROUP_SCOPE_THIRD = "scope3";
 
 export const GROUPS: Partial<Group>[] = [
     {
@@ -45,10 +48,37 @@ export const GROUPS: Partial<Group>[] = [
         scope: GROUP_SCOPE_FIRST,
     },
     {
+        active: false,
         name: GROUP_NAME_SECOND,
         scope: GROUP_SCOPE_SECOND,
-    }
+    },
+    {
+        name: GROUP_NAME_THIRD,
+        scope: GROUP_SCOPE_THIRD,
+    },
 ];
+
+// *** Lists ***
+
+export const LIST_NAME_FIRST = "First List";
+export const LIST_NAME_SECOND = "Second List";
+export const LIST_NAME_THIRD = "Third List";
+
+export const LISTS: Partial<List>[] = [
+    {
+        name: LIST_NAME_FIRST,
+    },
+    {
+        active: false,
+        name: LIST_NAME_SECOND,
+        notes: "This is the second list",
+        theme: "aqua",
+    },
+    {
+        name: LIST_NAME_THIRD,
+    },
+];
+
 
 // *** Refresh Tokens ***
 

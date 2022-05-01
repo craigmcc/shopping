@@ -27,6 +27,7 @@ describe("GroupServices Functional Tests", () => {
     beforeEach("#beforeEach", async () => {
         await UTILS.loadData({
             withGroups: true,
+            withLists: true,
         });
     })
 
@@ -50,30 +51,16 @@ describe("GroupServices Functional Tests", () => {
 
         })
 
-        xit("should pass on included children", async () => {
+        it("should pass on included children", async () => {
 
             const groups = await GroupServices.all({
-                // TODO
+                withLists: "",
             });
             groups.forEach(group => {
-/*
-                expect(group.authors).to.exist;
-                group.authors.forEach(author => {
-                    expect(author.groupId).to.equal(group.id);
+                expect(group.lists).to.exist;
+                group.lists.forEach(list => {
+                    expect(list.groupId).to.equal(group.id);
                 });
-                expect(group.series).to.exist;
-                group.series.forEach(series => {
-                    expect(series.groupId).to.equal(group.id);
-                });
-                expect(group.stories).to.exist;
-                group.stories.forEach(story => {
-                    expect(story.groupId).to.equal(group.id);
-                });
-                expect(group.volumes).to.exist;
-                group.volumes.forEach(volume => {
-                    expect(volume.groupId).to.equal(group.id);
-                });
-*/
             })
 
         })
@@ -110,10 +97,6 @@ describe("GroupServices Functional Tests", () => {
 
     })
 
-    xdescribe("GroupServices.authors()", () => {
-        // TODO
-    })
-
     describe("GroupServices.exact()", () => {
 
         it("should fail on invalid name", async () => {
@@ -131,6 +114,22 @@ describe("GroupServices Functional Tests", () => {
                     expect.fail(`Should not have thrown '${error}'`);
                 }
             }
+        })
+
+        it("should pass on included children", async () => {
+
+            const groups = await GroupServices.all();
+            groups.forEach(async group => {
+                const name = group.name ? group.name : "foo";
+                const result = await GroupServices.exact(name, {
+                    withLists: "",
+                });
+                expect(result.lists).to.exist;
+                result.lists.forEach(list => {
+                    expect(list.groupId).to.equal(result.id);
+                });
+            })
+
         })
 
         it ("should pass on valid names", async () => {
@@ -167,32 +166,18 @@ describe("GroupServices Functional Tests", () => {
 
         })
 
-        xit("should pass on included children", async () => {
+        it("should pass on included children", async () => {
 
             const INPUTS = await GroupServices.all();
 
             INPUTS.forEach(async INPUT => {
                 const group = await GroupServices.find(INPUT.id, {
-                    // TODO
+                    withLists: "",
                 });
-/*
-                expect(group.authors).to.exist;
-                group.authors.forEach(author => {
-                    expect(author.groupId).to.equal(group.id);
+                expect(group.lists).to.exist;
+                group.lists.forEach(list => {
+                    expect(list.groupId).to.equal(group.id);
                 });
-                expect(group.series).to.exist;
-                group.series.forEach(series => {
-                    expect(series.groupId).to.equal(group.id);
-                });
-                expect(group.stories).to.exist;
-                group.stories.forEach(story => {
-                    expect(story.groupId).to.equal(group.id);
-                });
-                expect(group.volumes).to.exist;
-                group.volumes.forEach(volume => {
-                    expect(volume.groupId).to.equal(group.id);
-                });
-*/
             });
 
         })
@@ -289,6 +274,52 @@ describe("GroupServices Functional Tests", () => {
 
             const OUTPUT = await GroupServices.insert(INPUT);
             compareGroupNew(OUTPUT, INPUT);
+
+        })
+
+    })
+
+    describe("GroupServices.lists()", () => {
+
+        it("should pass on active Lists", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_FIRST);
+            const LISTS = await GroupServices.lists(GROUP.id, {
+                active: "",
+            });
+
+            expect(LISTS.length).to.be.lessThanOrEqual(SeedData.LISTS.length);
+            LISTS.forEach(LIST => {
+                expect(LIST.active).to.be.true;
+                expect(LIST.groupId).to.equal(GROUP.id);
+            });
+
+        })
+
+        it("should pass on all Lists", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_SECOND);
+            const LISTS = await GroupServices.lists(GROUP.id);
+
+            expect(LISTS.length).to.equal(SeedData.LISTS.length);
+            LISTS.forEach(LIST => {
+                expect(LIST.groupId).to.equal(GROUP.id);
+            });
+
+        })
+
+        it("should pass on name'd Lists", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_THIRD);
+            const NAME = "On"; // Should match "Second List"
+            const LISTS = await GroupServices.lists(GROUP.id, {
+                name: NAME,
+            });
+
+            expect(LISTS.length).to.equal(1);
+            LISTS.forEach(LIST => {
+                expect(LIST.name.toLowerCase()).to.include(NAME.toLowerCase());
+            });
 
         })
 
