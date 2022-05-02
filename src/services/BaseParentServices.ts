@@ -46,7 +46,7 @@ abstract class BaseParentServices<M extends Model> extends BaseCommonServices<M>
             order: this.order,
         }, query);
         // @ts-ignore
-        return this.model.findAll(options);
+        return await this.model.findAll(options);
     }
 
     /**
@@ -60,7 +60,7 @@ abstract class BaseParentServices<M extends Model> extends BaseCommonServices<M>
      * @throws NotFound if the requested model instance cannot be found
      */
     public async find(modelId: string, query?: any): Promise<M> {
-        return this.read(
+        return await this.read(
             `${this.name}Services.find`,
             modelId,
             query

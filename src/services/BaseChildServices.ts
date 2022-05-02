@@ -74,7 +74,7 @@ abstract class BaseChildServices<C extends Model, P extends Model> extends BaseC
             }
         }, query);
         // @ts-ignore
-        return this.model.findAll(options);
+        return await this.model.findAll(options);
     }
 
     /**
@@ -89,7 +89,7 @@ abstract class BaseChildServices<C extends Model, P extends Model> extends BaseC
      * @throws NotFound if the requested child instance cannot be found
      */
     public async find(parentId: string, childId: string, query?: any): Promise<C> {
-        return this.read(
+        return await this.read(
             `${this.name}Services.find`,
             parentId,
             childId,
