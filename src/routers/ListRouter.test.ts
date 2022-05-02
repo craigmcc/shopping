@@ -13,6 +13,7 @@ chai.use(chaiHttp);
 
 import app from "./ExpressApplication";
 import List from "../models/List";
+import ListServices from "../services/ListServices";
 import RouterUtils, {AUTHORIZATION} from "../test/RouterUtils";
 import * as SeedData from "../test/SeedData";
 import {CREATED, FORBIDDEN, NOT_FOUND, OK} from "../util/HttpErrors";
@@ -243,6 +244,180 @@ describe("ListRouter Functional Tests", () => {
             expect(response).to.be.json;
             expect(response.body.id).to.exist;
             expect(response.body.name).to.equal(INPUT.name);
+
+        });
+
+    });
+
+    describe("ListRouter DELETE /api/lists/:groupId/:listId", () => {
+
+        const PATH = "/api/lists/:groupId/:listId";
+
+        it("should fail on authenticated regular", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_THIRD);
+            const USER_USERNAME = SeedData.USER_USERNAME_THIRD_REGULAR;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .delete(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID))
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(FORBIDDEN);
+            expect(response).to.be.json;
+            expect(response.body.message).to.include("Required scope not authorized");
+
+        });
+
+        it("should pass on authenticated admin", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_FIRST);
+            const USER_USERNAME = SeedData.USER_USERNAME_FIRST_ADMIN;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .delete(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID))
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(OK);
+            expect(response).to.be.json;
+            expect(response.body.id).to.equal(LIST_ID);
+
+        });
+
+        it("should pass on authenticated superuser", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_FIRST);
+            const USER_USERNAME = SeedData.USER_USERNAME_SUPERUSER;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .delete(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID))
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(OK);
+            expect(response).to.be.json;
+            expect(response.body.id).to.equal(LIST_ID);
+
+        });
+
+    });
+
+    describe("ListRouter GET /api/lists/:groupId/:listId", () => {
+
+        const PATH = "/api/lists/:groupId/:listId";
+
+        it("should pass on authenticated admin", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_FIRST);
+            const USER_USERNAME = SeedData.USER_USERNAME_FIRST_ADMIN;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .get(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID))
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(OK);
+            expect(response).to.be.json;
+            expect(response.body.id).to.equal(LIST_ID);
+
+        });
+
+        it("should pass on authenticated regular", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_THIRD);
+            const USER_USERNAME = SeedData.USER_USERNAME_THIRD_REGULAR;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .get(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID))
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(OK);
+            expect(response).to.be.json;
+            expect(response.body.id).to.equal(LIST_ID);
+
+        });
+
+        it("should pass on authenticated superuser", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_SECOND);
+            const USER_USERNAME = SeedData.USER_USERNAME_SUPERUSER;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .get(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID))
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(OK);
+            expect(response).to.be.json;
+            expect(response.body.id).to.equal(LIST_ID);
+
+        });
+
+    });
+
+    describe("ListRouter PUT /api/lists/:groupId/:listId", () => {
+
+        const PATH = "/api/lists/:groupId/:listId";
+
+        it("should fail on authenticated regular", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_THIRD);
+            const USER_USERNAME = SeedData.USER_USERNAME_THIRD_REGULAR;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const INPUT = INPUTS[0];
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .put(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID), INPUT)
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(FORBIDDEN);
+            expect(response).to.be.json;
+            expect(response.body.message).to.include("Required scope not authorized");
+
+        });
+
+        it("should pass on authenticated admin", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_FIRST);
+            const USER_USERNAME = SeedData.USER_USERNAME_FIRST_ADMIN;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const INPUT = INPUTS[0];
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .put(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID), INPUT)
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(OK);
+            expect(response).to.be.json;
+            expect(response.body.id).to.equal(LIST_ID);
+
+        });
+
+        it("should pass on authenticated superuser", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_SECOND);
+            const USER_USERNAME = SeedData.USER_USERNAME_SUPERUSER;
+            const INPUTS = await ListServices.all(GROUP.id);
+            const INPUT = INPUTS[0];
+            const LIST_ID = INPUTS[0].id;
+
+            const response = await chai.request(app)
+                .put(PATH.replace(":groupId", GROUP.id)
+                    .replace(":listId", LIST_ID), INPUT)
+                .set(AUTHORIZATION, await UTILS.credentials(USER_USERNAME));
+            expect(response).to.have.status(OK);
+            expect(response).to.be.json;
+            expect(response.body.id).to.equal(LIST_ID);
 
         });
 
