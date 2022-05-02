@@ -70,9 +70,13 @@ export abstract class BaseUtils {
         if (options.withGroups) {
             const groups = await loadGroups(SeedData.GROUPS);
             if (options.withLists) {
-                groups.forEach(async group => {
-                    await loadLists(group, SeedData.LISTS);
+                let lists: Partial<List>[] = [];
+                groups.forEach(group => {
+                    SeedData.LISTS.forEach(list => {
+                        lists.push({ ...list, groupId: group.id });
+                    });
                 });
+                lists = await loadLists(lists);
             }
         }
 
@@ -114,21 +118,14 @@ const loadGroups
     return results;
 }
 
-const loadLists
-    = async (group: Partial<Group>, lists: Partial<List>[]): Promise<List[]> =>
-{
-    lists.forEach(list => {
-        list.groupId = group.id;
-    });
-    let results: List[] = [];
+const loadLists = async (lists: Partial<List>[]): Promise<List[]> => {
     try {
-        // @ts-ignore NOTE - did Typescript get tougher about Partial<M>?
-        results = await List.bulkCreate(lists);
+        //@ts-ignore NOTE - did Typescript get tougher about Partial<M>?
+        return await List.bulkCreate(lists, {returning: true});
     } catch (error) {
-        console.info("  Reloading Lists ERROR", error);
+        console.info(`  Reloading Lists ERROR`, error);
         throw error;
     }
-    return results;
 }
 
 const loadRefreshTokens
