@@ -12,6 +12,7 @@ import {Sequelize} from "sequelize-typescript";
 import AccessToken from "./AccessToken";
 import Category from "./Category";
 import Group from "./Group";
+import Item from "./Item";
 import List from "./List";
 import RefreshToken from "./RefreshToken";
 import User from "./User";
@@ -35,6 +36,7 @@ Database.addModels([
     // Group Stack
     Group,
     Category,
+    Item,
     List,
     // User Stack
     User,

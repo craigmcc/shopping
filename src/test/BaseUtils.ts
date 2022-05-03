@@ -11,6 +11,7 @@ import AccessToken from "../models/AccessToken";
 import Category from "../models/Category";
 import Database from "../models/Database";
 import Group from "../models/Group";
+import Item from "../models/Item";
 import List from "../models/List";
 import RefreshToken from "../models/RefreshToken";
 import User from "../models/User";
@@ -78,6 +79,23 @@ export abstract class BaseUtils {
                     });
                 });
                 categories = await loadCategories(categories);
+                if (options.withItems) {
+                    let items: Partial<Item>[] = [];
+                    groups.forEach(group => {
+                        SeedData.ITEMS.forEach(item => {
+                            const newItem: Partial<Item> = { ...item, groupId: group.id };
+                            let categoryId: string | undefined;
+                            categories.forEach(category => {
+                                if (!categoryId && (category.groupId === group.id)) {
+                                    categoryId = category.id;
+                                }
+                            })
+                            newItem.categoryId = categoryId;
+                            items.push(newItem);
+                        });
+                    });
+                    items = await loadItems(items);
+                }
             }
             if (options.withLists) {
                 let lists: Partial<List>[] = [];
@@ -119,7 +137,7 @@ const loadCategories = async (categories: Partial<Category>[]): Promise<Category
         //@ts-ignore NOTE - did Typescript get tougher about Partial<M>?
         return await Category.bulkCreate(categories, {returning: true});
     } catch (error) {
-        console.info(`  Reloading Lists ERROR`, error);
+        console.info(`  Reloading Categories ERROR`, error);
         throw error;
     }
 }
@@ -136,6 +154,16 @@ const loadGroups
         throw error;
     }
     return results;
+}
+
+const loadItems = async (items: Partial<Item>[]): Promise<Item[]> => {
+    try {
+        //@ts-ignore NOTE - did Typescript get tougher about Partial<M>?
+        return await Item.bulkCreate(items, {returning: true});
+    } catch (error) {
+        console.info(`  Reloading Items ERROR`, error);
+        throw error;
+    }
 }
 
 const loadLists = async (lists: Partial<List>[]): Promise<List[]> => {

@@ -37,7 +37,7 @@ exports.up = pgm => {
     });
 
     pgm.createIndex("users", "username", {
-        name: "uk_users_username",
+        name: "users_username_key",
         unique: true,
     });
 

@@ -9,6 +9,7 @@
 import AccessToken from "../models/AccessToken";
 import Category from "../models/Category";
 import Group from "../models/Group";
+import Item from "../models/Item";
 import List from "../models/List";
 import RefreshToken from "../models/RefreshToken";
 import User from "../models/User";
@@ -40,7 +41,7 @@ export const CATEGORY_NAME_FIRST = "First Category";
 export const CATEGORY_NAME_SECOND = "Second Category";
 export const CATEGORY_NAME_THIRD = "Third Category";
 
-export const CATEGORIES: Partial<List>[] = [
+export const CATEGORIES: Partial<Category>[] = [
     {
         name: CATEGORY_NAME_FIRST,
     },
@@ -54,7 +55,6 @@ export const CATEGORIES: Partial<List>[] = [
         name: CATEGORY_NAME_THIRD,
     },
 ];
-
 
 // *** Groups ***
 
@@ -78,6 +78,27 @@ export const GROUPS: Partial<Group>[] = [
     {
         name: GROUP_NAME_THIRD,
         scope: GROUP_SCOPE_THIRD,
+    },
+];
+
+// *** Items ***
+
+export const ITEM_NAME_FIRST = "First Item";
+export const ITEM_NAME_SECOND = "Second Item";
+export const ITEM_NAME_THIRD = "Third Item";
+
+export const ITEMS: Partial<Item>[] = [
+    {
+        name: ITEM_NAME_FIRST,
+    },
+    {
+        active: false,
+        name: ITEM_NAME_SECOND,
+        notes: "This is the second item",
+        theme: "aqua",
+    },
+    {
+        name: ITEM_NAME_THIRD,
     },
 ];
 

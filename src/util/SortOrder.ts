@@ -22,6 +22,10 @@ export const GROUPS: Order = [
     ["name", "ASC" ],
 ];
 
+export const ITEMS: Order = [
+    [ "name", "ASC" ],
+];
+
 export const LISTS: Order = [
     [ "groupId", "ASC" ],
     [ "name", "ASC" ],

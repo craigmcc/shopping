@@ -1,6 +1,6 @@
-// Category ----------------------------------------------------------------------
+// Item ----------------------------------------------------------------------
 
-// An individual shopping list that belongs to a Group.
+// An individual item that can be added to a shopping list, belonging to a Category.
 
 // External Module -----------------------------------------------------------
 
@@ -8,26 +8,27 @@ import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-t
 
 // Internal Modules ----------------------------------------------------------
 
+import Category from "./Category";
 import Group from "./Group";
-import {validateCategoryNameUnique} from "../util/AsyncValidators";
+import {validateItemNameUnique} from "../util/AsyncValidators";
 import {BadRequest} from "../util/HttpErrors";
 
 // Public Objects ------------------------------------------------------------
 
 @Table({
-    tableName: "categories",
+    tableName: "items",
     timestamps: false,
     validate: {
-        isNameUnique: async function(this: Category): Promise<void> {
-            if (!(await validateCategoryNameUnique(this))) {
+        isNameUnique: async function(this: Item): Promise<void> {
+            if (!(await validateItemNameUnique(this))) {
                 throw new BadRequest
-                    (`name: Name '${this.name}' is already in use`);
+                (`name: Name '${this.name}' is already in use`);
             }
         },
     },
     version: false,
 })
-class Category extends Model<Category> {
+class Item extends Model<Item> {
 
     @Column({
         allowNull: false,
@@ -36,7 +37,7 @@ class Category extends Model<Category> {
         primaryKey: true,
         type: DataType.UUID,
     })
-    // Primary key for this Category
+    // Primary key for this Item
     id!: string;
 
     @Column({
@@ -50,8 +51,32 @@ class Category extends Model<Category> {
             }
         }
     })
-    // Is this Category active?
+    // Is this Item active?
     active!: boolean;
+
+    @BelongsTo(() => Category, {
+        foreignKey: {
+            allowNull: false,
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    // Category this Item is assigned to
+    category!: Category;
+
+    @ForeignKey(() => Category)
+    @Column({
+        allowNull: false,
+        field: "category_id",
+        type: DataType.UUID,
+        validate: {
+            notNull: {
+                msg: "categoryId: Is required",
+            }
+        }
+    })
+    // ID of the Category this Item is assigned to
+    categoryId!: string;
 
     @BelongsTo(() => Group, {
         foreignKey: {
@@ -60,7 +85,7 @@ class Category extends Model<Category> {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })
-    // Group that owns this Category
+    // Group that owns this Item
     group!: Group;
 
     @ForeignKey(() => Group)
@@ -75,7 +100,7 @@ class Category extends Model<Category> {
             }
         }
     })
-    // ID of the Group that owns this Category
+    // ID of the Group that owns this Item
     groupId!: string;
 
     @Column({
@@ -89,7 +114,7 @@ class Category extends Model<Category> {
             },
         }
     })
-    // Per-group unique name of this Category
+    // Per-group unique name of this Item
     name!: string;
 
     @Column({
@@ -97,7 +122,7 @@ class Category extends Model<Category> {
         field: "notes",
         type: DataType.TEXT
     })
-    // General notes about this Category
+    // General notes about this Item
     notes?: string;
 
     @Column({
@@ -110,4 +135,4 @@ class Category extends Model<Category> {
 
 }
 
-export default Category;
+export default Item;

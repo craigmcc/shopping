@@ -32,7 +32,7 @@ exports.up = pgm => {
     });
 
     pgm.createIndex("access_tokens", "token", {
-        name: "uk_access_tokens_token",
+        name: "access_tokens_token_key",
         unique: true,
     });
 

@@ -9,7 +9,8 @@ import {PasswordTokenRequest} from "@craigmcc/oauth-orchestrator";
 
 // Internal Modules ----------------------------------------------------------
 
-import BaseUtils, {OPTIONS} from "./BaseUtils"
+import BaseUtils, {OPTIONS} from "./BaseUtils";
+import Category from "../models/Category";
 import Group from "../models/Group";
 import User from "../models/User";
 import OAuthOrchestrator from "../oauth/OAuthOrchestrator";
@@ -55,6 +56,28 @@ export class ServicesUtils extends BaseUtils {
      */
     public invalidId(): string {
         return uuid.v1();
+    }
+
+    /**
+     * Look up and return the specified Category from the database.
+     *
+     * @param group                     Group owning requested Category
+     * @param name                      Name of the requested Category
+     *
+     * @throws NotFound                 If no such Group exists
+     */
+    public async lookupCategory(group: Group, name: string): Promise<Category> {
+        const result = await Category.findOne({
+            where: {
+                groupId: group.id,
+                name: name
+            }
+        });
+        if (result) {
+            return result;
+        } else {
+            throw new NotFound(`name: Missing Category '${name}'`);
+        }
     }
 
     /**

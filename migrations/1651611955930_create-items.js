@@ -4,7 +4,7 @@ exports.shorthands = undefined;
 
 exports.up = pgm => {
 
-    pgm.createTable("categories", {
+    pgm.createTable("items", {
         id: {
             notNull: true,
             primaryKey: true,
@@ -14,6 +14,13 @@ exports.up = pgm => {
             default: true,
             notNull: true,
             type: "boolean",
+        },
+        category_id: {
+            onDelete: "cascade",
+            onUpdate: "cascade",
+            notNull: true,
+            references: "categories",
+            type: "uuid",
         },
         group_id: {
             onDelete: "cascade",
@@ -34,8 +41,8 @@ exports.up = pgm => {
         },
     });
 
-    pgm.createIndex("categories", ["group_id", "name"], {
-        name: "categories_group_id_name_key",
+    pgm.createIndex("items", ["group_id", "name"], {
+        name: "items_group_id_name_key",
         unique: true,
     });
 

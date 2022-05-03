@@ -28,6 +28,7 @@ describe("GroupServices Functional Tests", () => {
         await UTILS.loadData({
             withCategories: true,
             withGroups: true,
+            withItems: true,
             withLists: true,
         });
     })
@@ -321,6 +322,52 @@ describe("GroupServices Functional Tests", () => {
 
             const OUTPUT = await GroupServices.insert(INPUT);
             compareGroupNew(OUTPUT, INPUT);
+
+        })
+
+    })
+
+    describe("GroupServices.items()", () => {
+
+        it("should pass on active Items", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_FIRST);
+            const ITEMS = await GroupServices.items(GROUP.id, {
+                active: "",
+            });
+
+            expect(ITEMS.length).to.be.lessThanOrEqual(SeedData.LISTS.length);
+            ITEMS.forEach(ITEM => {
+                expect(ITEM.active).to.be.true;
+                expect(ITEM.groupId).to.equal(GROUP.id);
+            });
+
+        })
+
+        it("should pass on all Items", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_SECOND);
+            const ITEMS = await GroupServices.items(GROUP.id);
+
+            expect(ITEMS.length).to.equal(SeedData.LISTS.length);
+            ITEMS.forEach(ITEM => {
+                expect(ITEM.groupId).to.equal(GROUP.id);
+            });
+
+        })
+
+        it("should pass on name'd Items", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_THIRD);
+            const NAME = "On"; // Should match "Second Item"
+            const ITEMS = await GroupServices.items(GROUP.id, {
+                name: NAME,
+            });
+
+            expect(ITEMS.length).to.equal(1);
+            ITEMS.forEach(ITEM => {
+                expect(ITEM.name.toLowerCase()).to.include(NAME.toLowerCase());
+            });
 
         })
 

@@ -10,6 +10,7 @@ import {Router} from "express";
 
 import CategoryRouter from "./CategoryRouter";
 import GroupRouter from "./GroupRouter";
+import ItemRouter from "./ItemRouter";
 import ListRouter from "./ListRouter";
 import UserRouter from "./UserRouter";
 
@@ -25,5 +26,6 @@ export default ApiRouter;
 
 ApiRouter.use("/categories", CategoryRouter);
 ApiRouter.use("/groups", GroupRouter);
+ApiRouter.use("/items", ItemRouter);
 ApiRouter.use("/lists", ListRouter);
 ApiRouter.use("/users", UserRouter);

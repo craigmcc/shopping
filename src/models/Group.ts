@@ -10,6 +10,7 @@ import {Column, DataType, HasMany, Model, Table} from "sequelize-typescript";
 // Internal Modules ----------------------------------------------------------
 
 import Category from "./Category";
+import Item from "./Item";
 import List from "./List";
 import {validateGroupScope} from "../util/ApplicationValidators";
 import {validateGroupNameUnique, validateGroupScopeUnique} from "../util/AsyncValidators";
@@ -76,6 +77,13 @@ class Group extends Model<Group> {
     })
     // Email address for this User
     email!: string;
+
+    @HasMany(() => Item, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    // Items owned by this Group
+    items!: Item[];
 
     @HasMany(() => List, {
         onDelete: "CASCADE",

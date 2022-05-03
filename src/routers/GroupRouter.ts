@@ -87,6 +87,16 @@ GroupRouter.get("/:groupId/categories",
         ));
     });
 
+// GET /:groupId/items - Find matching Items for this Group
+GroupRouter.get("/:groupId/items",
+    requireRegular,
+    async (req: Request, res: Response) => {
+        res.send(await GroupServices.items(
+            req.params.groupId,
+            req.query
+        ));
+    });
+
 // GET /:groupId/lists - Find matching Lists for this Group
 GroupRouter.get("/:groupId/lists",
     requireRegular,

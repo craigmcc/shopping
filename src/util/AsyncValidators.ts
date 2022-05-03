@@ -16,6 +16,7 @@ import AccessToken from "../models/AccessToken";
 import Category from "../models/Category";
 import RefreshToken from "../models/RefreshToken";
 import Group from "../models/Group";
+import Item from "../models/Item";
 import List from "../models/List";
 import User from "../models/User";
 
@@ -61,7 +62,7 @@ export const validateCategoryNameUnique
                 }
             }
         }
-        let results = await List.findAll(options);
+        let results = await Category.findAll(options);
         return (results.length === 0);
     } else {
         return true;
@@ -114,6 +115,34 @@ export const validateGroupScopeUnique
             }
         }
         let results = await Group.findAll(options);
+        return (results.length === 0);
+    } else {
+        return true;
+    }
+}
+
+export const validateItemNameUnique
+    = async (item: Item): Promise<boolean> =>
+{
+    if (item && item.name) {
+        let options = {};
+        if (item.id) {
+            options = {
+                where: {
+                    id: {[Op.ne]: item.id},
+                    groupId: item.groupId,
+                    name: item.name
+                }
+            }
+        } else {
+            options = {
+                where: {
+                    groupId: item.groupId,
+                    name: item.name
+                }
+            }
+        }
+        let results = await Item.findAll(options);
         return (results.length === 0);
     } else {
         return true;

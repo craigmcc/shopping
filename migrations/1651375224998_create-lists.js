@@ -35,7 +35,7 @@ exports.up = pgm => {
     });
 
     pgm.createIndex("lists", ["group_id", "name"], {
-        name: "uk_lists_group_id_name",
+        name: "lists_group_id_name_key",
         unique: true,
     });
 
