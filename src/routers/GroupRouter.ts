@@ -77,6 +77,16 @@ GroupRouter.put("/:groupId",
 
 // Child Lookup Routes -------------------------------------------------------
 
+// GET /:groupId/categories - Find matching Categories for this Group
+GroupRouter.get("/:groupId/categories",
+    requireRegular,
+    async (req: Request, res: Response) => {
+        res.send(await GroupServices.categories(
+            req.params.groupId,
+            req.query
+        ));
+    });
+
 // GET /:groupId/lists - Find matching Lists for this Group
 GroupRouter.get("/:groupId/lists",
     requireRegular,

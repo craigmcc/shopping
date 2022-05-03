@@ -8,6 +8,7 @@ import {Router} from "express";
 
 // Internal Modules ----------------------------------------------------------
 
+import CategoryRouter from "./CategoryRouter";
 import GroupRouter from "./GroupRouter";
 import ListRouter from "./ListRouter";
 import UserRouter from "./UserRouter";
@@ -22,6 +23,7 @@ export default ApiRouter;
 
 // Model Specific Routers ---------------------------------------------------
 
+ApiRouter.use("/categories", CategoryRouter);
 ApiRouter.use("/groups", GroupRouter);
 ApiRouter.use("/lists", ListRouter);
 ApiRouter.use("/users", UserRouter);

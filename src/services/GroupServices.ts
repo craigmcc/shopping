@@ -9,8 +9,10 @@ import {FindOptions, Op} from "sequelize";
 // Internal Modules ----------------------------------------------------------
 
 import BaseParentServices from "./BaseParentServices";
+import Category from "../models/Category";
 import Group from "../models/Group";
 import List from "../models/List";
+import CategoryServices from "../services/CategoryServices";
 import ListServices from "../services/ListServices";
 import {NotFound} from "../util/HttpErrors";
 import {appendPaginationOptions} from "../util/QueryParameters";
@@ -31,6 +33,14 @@ class GroupServices extends BaseParentServices<Group> {
     }
 
     // Model-Specific Methods ------------------------------------------------
+
+    public async categories(groupId: string, query?: any): Promise<Category[]> {
+        const group = await this.read("GroupServices.categories", groupId);
+        const options: FindOptions = CategoryServices.appendMatchOptions({
+            order: SortOrder.CATEGORIES,
+        }, query);
+        return group.$get("categories", options);
+    }
 
     public async exact(name: string, query?: any): Promise<Group> {
         let options: FindOptions = this.appendIncludeOptions({

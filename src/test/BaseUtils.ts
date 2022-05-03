@@ -8,6 +8,7 @@
 
 import * as SeedData from "./SeedData";
 import AccessToken from "../models/AccessToken";
+import Category from "../models/Category";
 import Database from "../models/Database";
 import Group from "../models/Group";
 import List from "../models/List";
@@ -69,6 +70,15 @@ export abstract class BaseUtils {
         // Load groups (and related children) if requested
         if (options.withGroups) {
             const groups = await loadGroups(SeedData.GROUPS);
+            if (options.withCategories) {
+                let categories: Partial<Category>[] = [];
+                groups.forEach(group => {
+                    SeedData.CATEGORIES.forEach(category => {
+                        categories.push({ ...category, groupId: group.id });
+                    });
+                });
+                categories = await loadCategories(categories);
+            }
             if (options.withLists) {
                 let lists: Partial<List>[] = [];
                 groups.forEach(group => {
@@ -100,6 +110,16 @@ const loadAccessTokens
         return results;
     } catch (error) {
         console.info(`  Reloading AccessTokens for User '${user.username}' ERROR`, error);
+        throw error;
+    }
+}
+
+const loadCategories = async (categories: Partial<Category>[]): Promise<Category[]> => {
+    try {
+        //@ts-ignore NOTE - did Typescript get tougher about Partial<M>?
+        return await Category.bulkCreate(categories, {returning: true});
+    } catch (error) {
+        console.info(`  Reloading Lists ERROR`, error);
         throw error;
     }
 }

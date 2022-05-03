@@ -9,6 +9,7 @@ import {Column, DataType, HasMany, Model, Table} from "sequelize-typescript";
 
 // Internal Modules ----------------------------------------------------------
 
+import Category from "./Category";
 import List from "./List";
 import {validateGroupScope} from "../util/ApplicationValidators";
 import {validateGroupNameUnique, validateGroupScopeUnique} from "../util/AsyncValidators";
@@ -60,6 +61,13 @@ class Group extends Model<Group> {
     })
     // Is this Group active?
     active!: boolean;
+
+    @HasMany(() => Category, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    // Categories owned by this Group
+    categories!: Category[];
 
     @Column({
         allowNull: true,

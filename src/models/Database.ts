@@ -10,6 +10,7 @@ import {Sequelize} from "sequelize-typescript";
 // Internal Modules ----------------------------------------------------------
 
 import AccessToken from "./AccessToken";
+import Category from "./Category";
 import Group from "./Group";
 import List from "./List";
 import RefreshToken from "./RefreshToken";
@@ -33,6 +34,7 @@ export const Database = new Sequelize(DATABASE_URL, {
 Database.addModels([
     // Group Stack
     Group,
+    Category,
     List,
     // User Stack
     User,

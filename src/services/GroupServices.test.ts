@@ -26,6 +26,7 @@ describe("GroupServices Functional Tests", () => {
 
     beforeEach("#beforeEach", async () => {
         await UTILS.loadData({
+            withCategories: true,
             withGroups: true,
             withLists: true,
         });
@@ -91,6 +92,52 @@ describe("GroupServices Functional Tests", () => {
             expect(OUTPUTS.length).to.equal(SeedData.GROUPS.length - 1);
             OUTPUTS.forEach((OUTPUT, index) => {
                 compareGroupOld(OUTPUT, INPUTS[index + OFFSET]);
+            });
+
+        })
+
+    })
+
+    describe("GroupServices.categories()", () => {
+
+        it("should pass on active Categories", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_FIRST);
+            const CATEGORIES = await GroupServices.categories(GROUP.id, {
+                active: "",
+            });
+
+            expect(CATEGORIES.length).to.be.lessThanOrEqual(SeedData.CATEGORIES.length);
+            CATEGORIES.forEach(CATEGORY => {
+                expect(CATEGORY.active).to.be.true;
+                expect(CATEGORY.groupId).to.equal(GROUP.id);
+            });
+
+        })
+
+        it("should pass on all Categories", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_SECOND);
+            const CATEGORIES = await GroupServices.categories(GROUP.id);
+
+            expect(CATEGORIES.length).to.equal(SeedData.CATEGORIES.length);
+            CATEGORIES.forEach(CATEGORY => {
+                expect(CATEGORY.groupId).to.equal(GROUP.id);
+            });
+
+        })
+
+        it("should pass on name'd Categories", async () => {
+
+            const GROUP = await UTILS.lookupGroup(SeedData.GROUP_NAME_THIRD);
+            const NAME = "On"; // Should match "Second Category"
+            const CATEGORIES = await GroupServices.categories(GROUP.id, {
+                name: NAME,
+            });
+
+            expect(CATEGORIES.length).to.equal(1);
+            CATEGORIES.forEach(CATEGORY => {
+                expect(CATEGORY.name.toLowerCase()).to.include(NAME.toLowerCase());
             });
 
         })

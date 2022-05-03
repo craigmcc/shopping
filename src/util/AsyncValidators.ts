@@ -13,6 +13,7 @@ import {Op} from "sequelize";
 // Internal Modules ----------------------------------------------------------
 
 import AccessToken from "../models/AccessToken";
+import Category from "../models/Category";
 import RefreshToken from "../models/RefreshToken";
 import Group from "../models/Group";
 import List from "../models/List";
@@ -33,6 +34,34 @@ export const validateAccessTokenTokenUnique
             options.where.id = { [Op.ne]: accessToken.id }
         }
         const results = await AccessToken.findAll(options);
+        return (results.length === 0);
+    } else {
+        return true;
+    }
+}
+
+export const validateCategoryNameUnique
+    = async (category: Category): Promise<boolean> =>
+{
+    if (category && category.name) {
+        let options = {};
+        if (category.id) {
+            options = {
+                where: {
+                    id: {[Op.ne]: category.id},
+                    groupId: category.groupId,
+                    name: category.name
+                }
+            }
+        } else {
+            options = {
+                where: {
+                    groupId: category.groupId,
+                    name: category.name
+                }
+            }
+        }
+        let results = await List.findAll(options);
         return (results.length === 0);
     } else {
         return true;

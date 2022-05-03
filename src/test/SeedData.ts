@@ -7,6 +7,7 @@
 // Internal Modules ----------------------------------------------------------
 
 import AccessToken from "../models/AccessToken";
+import Category from "../models/Category";
 import Group from "../models/Group";
 import List from "../models/List";
 import RefreshToken from "../models/RefreshToken";
@@ -32,6 +33,28 @@ export const ACCESS_TOKENS_SUPERUSER: Partial<AccessToken>[] = [
         // userId must be seeded
     },
 ];
+
+// *** Categories ***
+
+export const CATEGORY_NAME_FIRST = "First Category";
+export const CATEGORY_NAME_SECOND = "Second Category";
+export const CATEGORY_NAME_THIRD = "Third Category";
+
+export const CATEGORIES: Partial<List>[] = [
+    {
+        name: CATEGORY_NAME_FIRST,
+    },
+    {
+        active: false,
+        name: CATEGORY_NAME_SECOND,
+        notes: "This is the second category",
+        theme: "aqua",
+    },
+    {
+        name: CATEGORY_NAME_THIRD,
+    },
+];
+
 
 // *** Groups ***
 
